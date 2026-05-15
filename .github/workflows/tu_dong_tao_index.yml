@@ -1,0 +1,30 @@
+name: LTF Auto Manifest
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - '**/*.skp'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      - name: Chay Script Tao Danh Sach
+        run: ruby tao_danh_sach.rb
+
+      - name: Dong goi va cap nhat ban do
+        run: |
+          git config --global user.name 'LTF-Bot'
+          git config --global user.email 'bot@ltfdecor.com'
+          git add ltf_manifest.json
+          git commit -m "🤖 LTF Bot: Tu dong cap nhat ltf_manifest.json [skip ci]" || echo "Khong co thay doi"
+          git push
